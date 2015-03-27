@@ -52,7 +52,12 @@ function doIt() {
     if [[ ! $? -eq 0 ]]; then echo "✗"
     else echo "✔"
     fi
-
+    
+    # Install Oh-my-zsh, if not installed already
+    if [ ! -d "${ZSH}" ]; then
+        installPrezto
+    fi
+    
     # Copy all files to the home directory
     echo -n "Syncing files... "
 
