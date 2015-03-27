@@ -9,25 +9,6 @@ pushd $(dirname $0) >/dev/null
 script_path=$(pwd -P)
 popd >/dev/null
 
-
-function installVimSettings() {
-    echo "Installing vim settings\n"
-
-    echo -n "Installing vim plugins... "
-
-    # Install vundle plugin manager (if not installed already)
-    local vundle_dir="${HOME}/.vim/bundle/vundle"
-    if [ ! -d "${vundle_dir}" ]; then
-        local vundle_repository="https://github.com/gmarik/vundle.git"
-        git clone -q "${vundle_repository}" "${vundle_dir}"
-    fi
-
-    # Install the plugins
-    vim -c "BundleInstall" -c "qa"
-
-    echo "✔"
-}
-
 function doIt() {
     cd "${script_path}"
 
@@ -50,12 +31,6 @@ function doIt() {
     else echo "✔"
     fi
 
-    # Install vundle and vim plugins, if not installed already
-    local vim_plugins_count=$(ls -1 "${HOME}/.vim/bundle" | wc -l | tr -d " ")
-    if [[ ${vim_plugins_count} == "0" ]]; then
-        installVimSettings
-    fi
-    
     # Setup Prezto
     setopt EXTENDED_GLOB
     for rcfile in "${$HOME}"/.zprezto/runcoms/^README.md(.N); do
