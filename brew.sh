@@ -1,13 +1,16 @@
 # Install command-line tools using Homebrew
 
+# Brew cleanup 
+brew doctor
+
 # Make sure we’re using the latest Homebrew
 brew update
 
 # Upgrade any already-installed formulae
 brew upgrade
 
-# Install wget with IRI support
-brew install wget --enable-iri
+# Install wget with IRI support --enable-iri deprecated using --with-iri
+brew install wget --with-iri
 
 # Install tmux
 brew install tmux
