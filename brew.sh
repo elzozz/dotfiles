@@ -23,6 +23,7 @@ brew install homebrew/dupes/screen
 
 # Install other useful binaries
 brew install ack
+brew install mc
 #install exiv2
 #brew install git
 brew install imagemagick --with-webp
