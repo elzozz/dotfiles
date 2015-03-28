@@ -61,7 +61,7 @@ function doIt() {
     # Copy all files to the home directory
     echo -n "Syncing files... "
 
-    rsync --exclude ".git/" --exclude ".DS_Store" --exclude "bootstrap.zsh" \
+    rsync --exclude ".git/" --exclude "fonts/" --exclude ".DS_Store" --exclude "bootstrap.zsh" \
         --exclude "README.md" --exclude "brew.sh" --exclude ".osx" --exclude "brew-cask.sh" \
         --exclude "setup-new-mac.sh" -avq --no-perms . ${ZDOTDIR:-$HOME}
 
