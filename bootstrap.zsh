@@ -40,7 +40,16 @@ function installPrezto() {
     else echo "✔"
     fi
 }
-
+# Setup SublimeText3
+function setupST3() {
+    cd "${ZDOTDIR:-$HOME}"/Library/Application\ Support/Sublime\ Text\ 3/Packages/
+    rm -rf User
+    ln -s "${ZDOTDIR:-$HOME}"/Dropbox/Sublime/User
+    if [[ ! $? -eq 0 ]]; then echo "✗"
+    else echo "✔"
+    fi
+ }
+ 
 function doIt() {
     cd "${script_path}"
 
@@ -57,6 +66,9 @@ function doIt() {
     if [ ! -d "${ZSH}" ]; then
         installPrezto
     fi
+    
+    # SublimeText setup
+    setupST3
     
     # Copy all files to the home directory
     echo -n "Syncing files... "
