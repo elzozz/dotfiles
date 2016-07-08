@@ -1,0 +1,209 @@
+set nocompatible
+filetype off
+
+" Powerline Status
+set rtp+=/usr/local/lib/python2.7/dist-packages/powerline/bindings/vim/
+
+" Always show statusline
+set laststatus=2
+
+" Use 256 colours (Use this setting only if your terminal supports 256 colours)
+set t_Co=256
+
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" let Vundle manage Vundle
+" required!
+Plugin 'gmarik/vundle'
+
+" My Bundles here:
+"
+" original repos on github
+Plugin 'tpope/vim-sensible'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-markdown'
+Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'CSApprox'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'JSON.vim'
+Plugin 'bling/vim-airline'
+Plugin 'fatih/vim-go'
+Plugin 'tmux-plugins/vim-tmux'
+Plugin 'ekalinin/Dockerfile.vim'
+Plugin 'snipMate'
+Plugin 'bronson/vim-trailing-whitespace'
+Plugin 'scrooloose/syntastic'
+Plugin 'scrooloose/nerdtree'
+Plugin 'majutsushi/tagbar'
+Plugin 'tComment'
+Plugin 'Yggdroot/indentLine'
+
+call vundle#end()
+filetype plugin indent on     " required!
+
+"
+" Brief help
+" :BundleList          - list configured bundles
+" :BundleInstall(!)    - install(update) bundles
+" :BundleSearch(!) foo - search(or refresh cache first) for foo
+" :BundleClean(!)      - confirm(or auto-approve) removal of unused bundles
+"
+" see :h vundle for more details or wiki for FAQ
+" NOTE: comments after Bundle command are not allowed..
+
+" === Basic VIM settings ===
+filetype plugin indent on
+
+set hidden
+set number
+set title
+
+set softtabstop=2
+set shiftwidth=2
+set tabstop=2
+set expandtab         " Use spaces instead of tabs
+set ignorecase
+set vb                " turns off visual bell
+set smartindent
+set laststatus=2
+
+set backupdir=~/.vimbackup//,/tmp//
+set directory=~/.vimswaps//,/tmp//
+
+if has("vms")
+  set nobackup      " do not keep a backup file, use versions instead
+else
+  set backup        " keep a backup file
+endif
+set history=500     " keep 50 lines of command line history
+set showcmd         " display incomplete commands
+
+" =====================
+
+" === indentLine ===
+let g:indentLine_color_term = 239
+let g:indentLine_char = '¦'
+" =====================
+
+" === colorscheme ===
+syntax enable
+let g:solarized_termcolors=256
+set background=dark
+colorscheme solarized
+" ===================
+
+" === CtrlP Options ====
+let g:ctrlp_map = '<c-p>'     " Change mapping
+let g:ctrlp_cmd = 'CtrlP'
+
+let g:ctrlp_working_path_mode = 'ra'      " Working directory
+
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip  " Set ignore for file types
+" custom ignore patterns
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+  \ 'file': '\v\.(exe|so|dll|sublime-project|sublime-workspace)$',
+  \ }
+let g:ctrlp_user_command = 'find %s -type f'  " Custom file listing command
+" let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard'] " Ignore file in .gitignore
+
+" ==================================
+
+" === Syntastic ===
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+" =====================================
+
+" === NERDTree ===
+autocmd vimenter * NERDTree           " Start at startup
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+
+map <C-n> :NERDTreeToggle<CR>
+
+" Close if only NERDTree is left open
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif  
+" =====================================
+
+" === Tagbar ===
+
+noremap <leader>] :TagbarToggle<CR>
+
+" =====================================
+
+" === Filetype and autocmd options ===
+
+au! BufRead,BufNewFile *.json set filetype=json
+augroup json_autocmd
+  autocmd!
+  autocmd FileType json set autoindent
+  autocmd FileType json set formatoptions=tcq2l
+  autocmd FileType json set textwidth=78 shiftwidth=2
+  autocmd FileType json set softtabstop=2 tabstop=8
+  autocmd FileType json set expandtab
+augroup END
+
+" Only do this part when compiled with support for autocommands.
+if has("autocmd")
+
+  " Enable file type detection.
+  " Use the default filetype settings, so that mail gets 'tw' set to 72,
+  " 'cindent' is on in C files, etc.
+  " Also load indent files, to automatically do language-dependent indenting.
+  filetype plugin indent on
+
+  " Put these in an autocmd group, so that we can delete them easily.
+  augroup vimrcEx
+  au!
+
+  autocmd FileType make     set noexpandtab
+  autocmd FileType python   set noexpandtab
+
+  " erlang for opscode
+  autocmd FileType erlang set expandtab
+  autocmd FileType erlang set softtabstop=4 tabstop=4 shiftwidth=4
+  autocmd FileType erlang set textwidth=92
+
+  " For all text files set 'textwidth' to 78 characters.
+  autocmd FileType text setlocal textwidth=78
+
+  " When editing a file, always jump to the last known cursor position.
+  " Don't do it when the position is invalid or when inside an event handler
+  " (happens when dropping a file on gvim).
+  autocmd BufReadPost *
+    \ if line("'\"") > 0 && line("'\"") <= line("$") |
+    \   exe "normal g`\"" |
+    \ endif
+
+  augroup END
+
+  au! BufRead,BufNewFile *.mkd   setfiletype mkd
+
+  augroup mkd
+
+    autocmd BufRead *.mkd  set ai formatoptions=tcroqn2 comments=n:>
+
+  augroup END
+
+  if exists("did\_load\_filetypes")
+
+    finish
+
+  endif
+
+else
+
+  set autoindent        " always set autoindenting on
+
+  " Settings for raw text editing
+endif " has("autocmd")
+" ===============================================
